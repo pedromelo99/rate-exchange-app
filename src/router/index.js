@@ -13,9 +13,9 @@ const routes = [
         name: "Conversor",
         component: CurrencyConverter,
         beforeEnter: (to, from, next) => {
-            // Verifica se o usuário tem os dados de autenticação no localStorage
-            if (!localStorage.getItem("username") || !localStorage.getItem("apiKey")) {
-                next("/"); // Se não houver nome de usuário ou chave da API, vai para a página de login
+            // Verifica se o usuário tem o nome de usuário no localStorage
+            if (!localStorage.getItem("username")) {
+                next("/"); // Se não houver nome de usuário, vai para a página de login
             } else {
                 next(); // Caso contrário, permite a entrada na página do conversor
             }

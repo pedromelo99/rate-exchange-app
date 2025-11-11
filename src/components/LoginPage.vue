@@ -13,9 +13,11 @@
                 <input v-model="username" type="text" class="form-control" placeholder="Digite seu nome de usuário" />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Chave da API:</label>
-                <input v-model="apiKey" type="text" class="form-control" placeholder="Digite sua chave da API" />
+            <div class="alert alert-info mb-3">
+                <small>
+                    <strong>ℹ️ API Pública:</strong> Este aplicativo usa a API Frankfurter, 
+                    uma API pública e gratuita para conversão de moedas. Não é necessária chave de API.
+                </small>
             </div>
 
             <button @click="login" class="btn btn-primary w-100">Entrar</button>
@@ -32,19 +34,17 @@ export default {
     data() {
         return {
             username: "",
-            apiKey: "",
             errorMessage: null,
             isDarkMode: localStorage.getItem("darkMode") === "true",
         };
     },
     methods: {
         login() {
-            if (this.username && this.apiKey) {
-                localStorage.setItem("username", this.username);
-                localStorage.setItem("apiKey", this.apiKey);
+            if (this.username && this.username.trim()) {
+                localStorage.setItem("username", this.username.trim());
                 this.$router.push("/conversor");
             } else {
-                this.errorMessage = "Por favor, insira o nome de usuário e a chave da API.";
+                this.errorMessage = "Por favor, insira um nome de usuário.";
             }
         },
         toggleDarkMode() {
