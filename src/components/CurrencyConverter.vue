@@ -1,10 +1,7 @@
 <template>
   <div class="container mt-5">
     <!-- Notificações -->
-    <NotificationComponent
-      :notifications="notifications"
-      @close="removeNotification"
-    />
+    <NotificationComponent :notifications="notifications" @close="removeNotification" />
 
     <div class="card shadow-lg p-4 bg-white text-dark">
       <!-- Header com Dark Mode Toggle -->
@@ -34,27 +31,15 @@
       <div class="form-section">
         <div class="mb-3">
           <label class="form-label">Valor:</label>
-          <input 
-            v-model.number="amount" 
-            type="number" 
-            class="form-control" 
-            placeholder="Digite o valor"
-            :disabled="isLoading"
-            min="0"
-            step="0.01"
-            @input="validateAmount"
-          />
+          <input v-model.number="amount" type="number" class="form-control" placeholder="Digite o valor"
+            :disabled="isLoading" min="0" step="0.01" @input="validateAmount" />
           <small v-if="amountError" class="text-danger">{{ amountError }}</small>
         </div>
 
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">De:</label>
-            <select 
-              v-model="fromCurrency" 
-              class="form-select"
-              :disabled="isLoading"
-            >
+            <select v-model="fromCurrency" class="form-select" :disabled="isLoading">
               <option v-for="(name, code) in currencies" :key="code" :value="code">
                 {{ code }} - {{ name }}
               </option>
@@ -63,11 +48,7 @@
 
           <div class="col-md-6 mb-3">
             <label class="form-label">Para:</label>
-            <select 
-              v-model="toCurrency" 
-              class="form-select"
-              :disabled="isLoading"
-            >
+            <select v-model="toCurrency" class="form-select" :disabled="isLoading">
               <option v-for="(name, code) in currencies" :key="code" :value="code">
                 {{ code }} - {{ name }}
               </option>
@@ -77,12 +58,7 @@
 
         <!-- Botão de Trocar Moedas -->
         <div class="text-center mb-3">
-          <button 
-            @click="swapCurrencies" 
-            class="btn btn-outline-secondary"
-            :disabled="isLoading"
-            title="Trocar moedas"
-          >
+          <button @click="swapCurrencies" class="btn btn-outline-secondary" :disabled="isLoading" title="Trocar moedas">
             ⇄ Trocar Moedas
           </button>
         </div>
@@ -111,20 +87,12 @@
       </div>
 
       <!-- Histórico de Conversões -->
-      <ConversionHistory
-        :conversions="conversions"
-        @delete-conversion="deleteConversion"
-        @clear-history="clearConversions"
-        @export="exportConversions"
-      />
+      <ConversionHistory :conversions="conversions" @delete-conversion="deleteConversion"
+        @clear-history="clearConversions" @export="exportConversions" />
 
       <!-- Controles Adicionais -->
       <div class="controls-footer mt-4">
-        <button
-          @click="clearCache"
-          class="btn btn-sm btn-outline-warning"
-          title="Limpar cache de API"
-        >
+        <button @click="clearCache" class="btn btn-sm btn-outline-warning" title="Limpar cache de API">
           🔄 Limpar Cache
         </button>
       </div>
@@ -177,7 +145,7 @@ export default defineComponent({
           y: {
             beginAtZero: false,
             ticks: {
-              callback: function(value) {
+              callback: function (value) {
                 return value.toFixed(4);
               }
             }
@@ -555,6 +523,7 @@ export default defineComponent({
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -566,9 +535,52 @@ export default defineComponent({
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 4px 25px rgba(13, 110, 253, 0.6);
   }
 }
 
@@ -576,6 +588,23 @@ export default defineComponent({
   to {
     transform: rotate(360deg);
   }
+}
+
+.result-box {
+  animation: slideUp 0.4s ease-out, glow 2s ease-in-out infinite;
+}
+
+.chart-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+.btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  animation: bounce 0.3s ease-out;
 }
 
 /* Responsivo */
@@ -600,43 +629,256 @@ export default defineComponent({
   .form-section {
     padding: 15px;
   }
+
+  .result-box h4 {
+    font-size: 18px;
+  }
+
+  .result-box h3 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0;
+  }
+
+  .card {
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .header-top {
+    gap: 12px;
+  }
+
+  .header-top h2 {
+    font-size: 20px;
+  }
+
+  .form-section {
+    padding: 12px;
+    margin: 15px 0;
+  }
+
+  .form-label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .result-box {
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .result-box h4 {
+    font-size: 16px;
+  }
+
+  .result-box h3 {
+    font-size: 20px;
+  }
+
+  .currency-label {
+    font-size: 0.8em;
+    padding: 2px 6px;
+  }
+
+  .chart-container {
+    height: 200px;
+    padding: 12px;
+  }
+
+  .controls-footer {
+    flex-direction: column;
+  }
+
+  .controls-footer button {
+    width: 100%;
+  }
+
+  .alert {
+    font-size: 13px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    padding: 12px;
+  }
+
+  .header-top h2 {
+    font-size: 18px;
+  }
+
+  .form-section {
+    padding: 10px;
+  }
+
+  .form-label {
+    font-size: 12px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+
+  .result-box {
+    padding: 12px;
+  }
+
+  .result-box h4,
+  .result-box h3 {
+    font-size: 14px;
+    margin: 4px 0;
+  }
+
+  .chart-container {
+    height: 150px;
+  }
 }
 
 /* Modo escuro */
 :global([data-bs-theme='dark']) .container {
-  background: #1a1a1a;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
 }
 
 :global([data-bs-theme='dark']) .card {
-  background: #2d2d2d !important;
-  color: #ffffff !important;
+  background: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #333333;
+}
+
+:global([data-bs-theme='dark']) .header-top h2 {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 :global([data-bs-theme='dark']) .form-section {
-  background: #3a3a3a;
+  background: #252525;
+  border: 1px solid #333333;
+}
+
+:global([data-bs-theme='dark']) .form-label {
+  color: #e0e0e0;
+  font-weight: 600;
 }
 
 :global([data-bs-theme='dark']) .form-control,
 :global([data-bs-theme='dark']) .form-select {
-  background: #404040;
-  border-color: #555;
-  color: #ffffff;
+  background: #2a2a2a;
+  border: 1px solid #444444;
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+:global([data-bs-theme='dark']) .form-control::placeholder {
+  color: #888888;
 }
 
 :global([data-bs-theme='dark']) .form-control:focus,
 :global([data-bs-theme='dark']) .form-select:focus {
-  border-color: #0d6efd;
-  background: #404040;
+  border-color: #6db3f2;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  box-shadow: 0 0 0 0.2rem rgba(109, 179, 242, 0.25);
+}
+
+:global([data-bs-theme='dark']) .form-control:disabled,
+:global([data-bs-theme='dark']) .form-select:disabled {
+  background: #1a1a1a;
+  opacity: 0.6;
+}
+
+:global([data-bs-theme='dark']) .alert-info {
+  background: #1e3a5f;
+  border-color: #2a5a8f;
+  color: #b3d9ff;
+}
+
+:global([data-bs-theme='dark']) .alert-success {
+  background: #1e5631;
+  border-color: #2a7a42;
+  color: #90ee90;
+}
+
+:global([data-bs-theme='dark']) .alert-danger {
+  background: #5f1e1e;
+  border-color: #8f2a2a;
+  color: #ff8888;
+}
+
+:global([data-bs-theme='dark']) .alert-light {
+  background: #2a2a2a;
+  border-color: #444444;
+  color: #e0e0e0;
+}
+
+:global([data-bs-theme='dark']) .btn-outline-secondary {
+  border-color: #555555;
+  color: #b0b0b0;
+}
+
+:global([data-bs-theme='dark']) .btn-outline-secondary:hover {
+  background: #444444;
+  border-color: #666666;
   color: #ffffff;
 }
 
+:global([data-bs-theme='dark']) .btn-outline-warning {
+  border-color: #ff9800;
+  color: #ffb366;
+}
+
+:global([data-bs-theme='dark']) .btn-outline-warning:hover {
+  background: #ff9800;
+  color: #000000;
+}
+
 :global([data-bs-theme='dark']) .chart-container {
-  background: #3a3a3a;
-  border-color: #555;
+  background: #252525;
+  border: 1px solid #333333;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 :global([data-bs-theme='dark']) .result-box {
   background: linear-gradient(135deg, #1e5631 0%, #2d7a3a 100%);
   border-color: #3a9d5d;
+  box-shadow: 0 4px 12px rgba(26, 150, 77, 0.2);
+}
+
+:global([data-bs-theme='dark']) .result-box h4,
+:global([data-bs-theme='dark']) .result-box h3 {
+  color: #ffffff;
+}
+
+:global([data-bs-theme='dark']) .result-box hr {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:global([data-bs-theme='dark']) .result-box .text-muted {
+  color: #b0b0b0 !important;
+}
+
+:global([data-bs-theme='dark']) .spinner-border {
+  border-color: #444444;
+  border-right-color: #0d6efd;
 }
 </style>
