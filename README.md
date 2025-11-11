@@ -1,4 +1,4 @@
-# conversor-moedas
+# rate-exchange-app
 
 ## Project setup
 ```
