@@ -4,12 +4,16 @@ Aplicativo de conversão de moedas desenvolvido com Vue.js 3, utilizando API pú
 
 ## 🚀 Funcionalidades
 
-- ✅ Conversão de moedas em tempo real
+- ✅ Conversão de moedas manual com botão dedicado
+- ✅ Troca rápida de moedas (botão ⇄ Trocar Moedas)
 - ✅ API pública (Frankfurter) - sem necessidade de chave de API
-- ✅ Conversão automática e reativa
+- ✅ Histórico de conversões com paginação
 - ✅ Histórico de taxas de câmbio (gráfico dos últimos 7 dias)
+- ✅ Modo escuro com cores sofisticadas
 - ✅ Interface moderna e responsiva
 - ✅ Formatação de valores monetários em português brasileiro
+- ✅ Autenticação básica com localStorage
+- ✅ Cache de requisições para melhor desempenho
 
 ## 🛠️ Tecnologias
 
@@ -52,19 +56,47 @@ npm run lint
 
 ## 🎯 Como Usar
 
-1. Acesse a aplicação
-2. Digite um nome de usuário (não é necessário chave de API)
-3. Selecione a moeda de origem e destino
-4. Digite o valor a ser convertido
-5. A conversão acontece automaticamente!
+### Conversão de Moedas
+1. Acesse a aplicação e faça login com um nome de usuário
+2. Selecione a moeda de origem (De) e a moeda de destino (Para)
+3. Digite o valor a ser convertido
+4. Clique no botão **💱 Converter** para executar a conversão
+5. O resultado aparecerá na seção de resultado
+
+### Recursos Disponíveis
+- **⇄ Trocar Moedas**: Inverte a posição das moedas (De ↔ Para)
+- **💱 Converter**: Executa a conversão manualmente
+- **🔄 Limpar Cache**: Limpa o cache de requisições da API
+- **📥 Exportar**: Exporta o histórico de conversões
+- **🗑️ Limpar**: Remove o histórico de conversões
+- **🌙 Modo Escuro**: Alterna entre modo claro e escuro
+
+### Histórico
+- Todas as conversões são salvas automaticamente
+- Visualize o histórico com detalhes de taxa, data e hora
+- Exporte seu histórico em formato JSON
+- Limpe o histórico quando necessário
+
+### Gráfico de Taxas
+- Após fazer uma conversão, veja o histórico de taxas dos últimos 7 dias
+- Visualize tendências de câmbio em um gráfico interativo
 
 ## 📊 Recursos de Reatividade
 
 O aplicativo demonstra reatividade do Vue.js através de:
-- **Watchers**: Conversão automática quando valores ou moedas mudam
-- **Debounce**: Evita requisições excessivas à API
+- **Evento de Clique**: Conversão manual ao clicar em "Converter"
 - **Computed Properties**: Formatação de valores monetários
 - **Estado Reativo**: Gerenciamento de loading, erros e dados
+- **LocalStorage**: Persistência de preferências e histórico
+
+## 🌙 Tema e Modo Escuro
+
+O aplicativo possui um modo escuro sofisticado com:
+- **Cores Elegantes**: Paleta azul-escura (#1a1a2e) para a caixa principal
+- **Bom Contraste**: Texto branco brilhante (#ffffff) para melhor legibilidade
+- **Caixas Internas**: Tons médios (#252d45) para elementos como formulário e resultado
+- **Persistência**: Suas preferências de tema são salvas no localStorage
+- **Toggle Fácil**: Botão para alternar entre tema claro e escuro
 
 ## 📝 Estrutura do Projeto
 

@@ -3,7 +3,8 @@
     <!-- Notificações -->
     <NotificationComponent :notifications="notifications" @close="removeNotification" />
 
-    <div class="card shadow-lg p-4 bg-white text-dark">
+    <div class="card shadow-lg p-4 bg-white text-dark"
+      :class="isDarkMode ? 'bg-dark text-white' : 'bg-white text-dark'">
       <!-- Header com Dark Mode Toggle -->
       <div class="header-top">
         <h2 class="text-center mb-0">💱 Conversor de Moedas</h2>
@@ -58,14 +59,20 @@
 
         <!-- Botão de Trocar Moedas -->
         <div class="text-center mb-3">
-          <button @click="swapCurrencies" class="btn btn-outline-secondary" :disabled="isLoading" title="Trocar moedas">
+          <button @click="swapCurrencies" class="btn btn-outline-secondary" :disabled="isLoading"
+            title="Trocar posição das moedas">
             ⇄ Trocar Moedas
+          </button>
+          <button @click="manualConvert" class="btn btn-outline-primary ms-2" :disabled="isLoading"
+            title="Executar conversão">
+            � Converter
           </button>
         </div>
       </div>
 
       <!-- Resultado da Conversão -->
-      <div v-if="convertedAmount !== null && !error" class="alert alert-success mt-4 text-center result-box">
+      <div v-if="showResult && convertedAmount !== null && !error"
+        class="alert alert-success mt-4 text-center result-box">
         <h4 class="mb-2">{{ formatAmount(amount) }} <span class="currency-label">{{ fromCurrency }}</span></h4>
         <h3 class="mb-0">=</h3>
         <h4 class="mt-2">{{ formatAmount(convertedAmount) }} <span class="currency-label">{{ toCurrency }}</span></h4>
@@ -81,13 +88,13 @@
       </div>
 
       <!-- Gráfico de Taxas de Câmbio -->
-      <div v-if="chartData && chartData.labels && chartData.labels.length" class="mt-4 chart-container">
+      <div v-if="showResult && chartData && chartData.labels && chartData.labels.length" class="mt-4 chart-container">
         <h5 class="text-center mb-3">📈 Histórico de Taxas (Últimos 7 dias)</h5>
         <LineChart :data="chartData" :options="chartOptions" />
       </div>
 
       <!-- Histórico de Conversões -->
-      <ConversionHistory :conversions="conversions" @delete-conversion="deleteConversion"
+      <ConversionHistory :conversions="conversions" :isDarkMode="isDarkMode" @delete-conversion="deleteConversion"
         @clear-history="clearConversions" @export="exportConversions" />
 
       <!-- Controles Adicionais -->
@@ -123,12 +130,14 @@ export default defineComponent({
   data() {
     return {
       username: localStorage.getItem('username') || '',
+      isDarkMode: localStorage.getItem('darkMode') === 'true',
       amount: 1,
       fromCurrency: 'USD',
       toCurrency: 'BRL',
       amountError: null,
       chartData: null,
       convertTimer: null,
+      showResult: false,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -167,15 +176,16 @@ export default defineComponent({
     },
   },
   watch: {
-    amount() {
-      this.debouncedConvert();
-    },
-    fromCurrency() {
-      this.debouncedConvert();
-    },
-    toCurrency() {
-      this.debouncedConvert();
-    },
+    // Watchers removidos para permitir conversão manual
+    // amount() {
+    //   this.debouncedConvert();
+    // },
+    // fromCurrency() {
+    //   this.debouncedConvert();
+    // },
+    // toCurrency() {
+    //   this.debouncedConvert();
+    // },
   },
   methods: {
     /**
@@ -257,6 +267,15 @@ export default defineComponent({
       const temp = this.fromCurrency;
       this.fromCurrency = this.toCurrency;
       this.toCurrency = temp;
+      this.showResult = false;
+    },
+
+    /**
+     * Realiza a conversão manualmente
+     */
+    async manualConvert() {
+      await this.convertCurrencyAndChart();
+      this.showResult = true;
     },
 
     /**
@@ -280,7 +299,8 @@ export default defineComponent({
      * Callback dark mode
      */
     onDarkModeToggle(isDarkMode) {
-      console.log('Dark mode:', isDarkMode);
+      this.isDarkMode = isDarkMode;
+      localStorage.setItem('darkMode', isDarkMode);
     },
   },
   async mounted() {
@@ -555,7 +575,9 @@ export default defineComponent({
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
 
@@ -565,7 +587,9 @@ export default defineComponent({
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
 
@@ -575,7 +599,9 @@ export default defineComponent({
 }
 
 @keyframes glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
   }
 
@@ -755,130 +781,137 @@ export default defineComponent({
   }
 }
 
-/* Modo escuro */
-:global([data-bs-theme='dark']) .container {
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-}
-
-:global([data-bs-theme='dark']) .card {
-  background: #1e1e1e !important;
+/* Estilos para o modo escuro usando classe bg-dark */
+.bg-dark.card {
+  background-color: #1a1a2e !important;
   color: #e0e0e0 !important;
-  border: 1px solid #333333;
+  border: 1px solid #2d3561 !important;
 }
 
-:global([data-bs-theme='dark']) .header-top h2 {
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+.text-white.card {
+  color: #f0f0f0 !important;
 }
 
-:global([data-bs-theme='dark']) .form-section {
-  background: #252525;
-  border: 1px solid #333333;
+/* Caixas internas em modo escuro */
+.bg-dark.card .form-section {
+  background-color: #252d45 !important;
+  border-color: #3d4566 !important;
 }
 
-:global([data-bs-theme='dark']) .form-label {
-  color: #e0e0e0;
-  font-weight: 600;
+.bg-dark.card .form-label {
+  color: #f0f0f0 !important;
+  font-weight: 600 !important;
 }
 
-:global([data-bs-theme='dark']) .form-control,
-:global([data-bs-theme='dark']) .form-select {
-  background: #2a2a2a;
-  border: 1px solid #444444;
-  color: #e0e0e0;
-  transition: all 0.3s ease;
+.bg-dark.card .alert {
+  background-color: #252d45 !important;
+  border-color: #3d4566 !important;
+  color: #f0f0f0 !important;
 }
 
-:global([data-bs-theme='dark']) .form-control::placeholder {
-  color: #888888;
+.bg-dark.card .alert-info {
+  background-color: #1e3a5f !important;
+  border-color: #2a5a8f !important;
+  color: #b3d9ff !important;
 }
 
-:global([data-bs-theme='dark']) .form-control:focus,
-:global([data-bs-theme='dark']) .form-select:focus {
-  border-color: #6db3f2;
-  background: #2a2a2a;
-  color: #e0e0e0;
-  box-shadow: 0 0 0 0.2rem rgba(109, 179, 242, 0.25);
+.bg-dark.card .alert-success {
+  background-color: #1e5631 !important;
+  border-color: #2a7a42 !important;
+  color: #90ee90 !important;
 }
 
-:global([data-bs-theme='dark']) .form-control:disabled,
-:global([data-bs-theme='dark']) .form-select:disabled {
-  background: #1a1a1a;
-  opacity: 0.6;
+.bg-dark.card .alert-danger {
+  background-color: #5f1e1e !important;
+  border-color: #8f2a2a !important;
+  color: #ff8888 !important;
 }
 
-:global([data-bs-theme='dark']) .alert-info {
-  background: #1e3a5f;
-  border-color: #2a5a8f;
-  color: #b3d9ff;
+.bg-dark.card .result-box {
+  background-color: #252d45 !important;
+  border-color: #3d4566 !important;
+  color: #f0f0f0 !important;
 }
 
-:global([data-bs-theme='dark']) .alert-success {
-  background: #1e5631;
-  border-color: #2a7a42;
-  color: #90ee90;
+.bg-dark.card .result-box h3,
+.bg-dark.card .result-box h4 {
+  color: #ffffff !important;
 }
 
-:global([data-bs-theme='dark']) .alert-danger {
-  background: #5f1e1e;
-  border-color: #8f2a2a;
-  color: #ff8888;
+.bg-dark.card .form-control,
+.bg-dark.card .form-select {
+  background-color: #1e2637 !important;
+  border-color: #3d4566 !important;
+  color: #f0f0f0 !important;
 }
 
-:global([data-bs-theme='dark']) .alert-light {
-  background: #2a2a2a;
-  border-color: #444444;
-  color: #e0e0e0;
+.bg-dark.card .form-control::placeholder {
+  color: #999999 !important;
 }
 
-:global([data-bs-theme='dark']) .btn-outline-secondary {
-  border-color: #555555;
-  color: #b0b0b0;
+.bg-dark.card .form-control:focus,
+.bg-dark.card .form-select:focus {
+  background-color: #1e2637 !important;
+  border-color: #5d6d8e !important;
+  color: #f0f0f0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(93, 109, 142, 0.25) !important;
 }
 
-:global([data-bs-theme='dark']) .btn-outline-secondary:hover {
-  background: #444444;
-  border-color: #666666;
-  color: #ffffff;
-}
-
-:global([data-bs-theme='dark']) .btn-outline-warning {
-  border-color: #ff9800;
-  color: #ffb366;
-}
-
-:global([data-bs-theme='dark']) .btn-outline-warning:hover {
-  background: #ff9800;
-  color: #000000;
-}
-
-:global([data-bs-theme='dark']) .chart-container {
-  background: #252525;
-  border: 1px solid #333333;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-:global([data-bs-theme='dark']) .result-box {
-  background: linear-gradient(135deg, #1e5631 0%, #2d7a3a 100%);
-  border-color: #3a9d5d;
-  box-shadow: 0 4px 12px rgba(26, 150, 77, 0.2);
-}
-
-:global([data-bs-theme='dark']) .result-box h4,
-:global([data-bs-theme='dark']) .result-box h3 {
-  color: #ffffff;
-}
-
-:global([data-bs-theme='dark']) .result-box hr {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-:global([data-bs-theme='dark']) .result-box .text-muted {
+.bg-dark.card .text-muted {
   color: #b0b0b0 !important;
 }
 
-:global([data-bs-theme='dark']) .spinner-border {
-  border-color: #444444;
-  border-right-color: #0d6efd;
+.bg-dark.card h2,
+.bg-dark.card h3,
+.bg-dark.card h4,
+.bg-dark.card h5 {
+  color: #ffffff !important;
+}
+
+/* Badges de moeda em modo escuro */
+.bg-dark.card .currency-label {
+  background-color: #3d4566 !important;
+  color: #ffffff !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+}
+
+/* Histórico de Conversões em modo escuro */
+.bg-dark.card :deep(.conversion-history) {
+  background-color: #252d45 !important;
+  border-color: #3d4566 !important;
+  color: #f0f0f0 !important;
+}
+
+.bg-dark.card :deep(.conversion-history-header),
+.bg-dark.card :deep(.conversion-item) {
+  background-color: #252d45 !important;
+  border-color: #3d4566 !important;
+  color: #f0f0f0 !important;
+}
+
+.bg-dark.card :deep(.conversion-history table) {
+  color: #f0f0f0 !important;
+}
+
+.bg-dark.card :deep(.conversion-history table thead th) {
+  background-color: #1e2637 !important;
+  color: #ffffff !important;
+  border-color: #3d4566 !important;
+}
+
+.bg-dark.card :deep(.conversion-history table tbody tr) {
+  border-color: #3d4566 !important;
+  background-color: #252d45 !important;
+}
+
+.bg-dark.card :deep(.conversion-history table tbody tr:hover) {
+  background-color: #2d3550 !important;
+}
+
+.bg-dark.card :deep(.conversion-history table tbody td) {
+  color: #f0f0f0 !important;
+  border-color: #3d4566 !important;
 }
 </style>

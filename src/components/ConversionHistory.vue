@@ -1,5 +1,5 @@
 <template>
-    <div class="conversion-history-container">
+    <div class="conversion-history-container" :class="{ 'bg-dark text-white': isDarkMode }">
         <div class="history-header">
             <h3>📊 Histórico de Conversões</h3>
             <div class="history-controls">
@@ -82,6 +82,10 @@ export default {
             type: Array,
             required: true,
             default: () => [],
+        },
+        isDarkMode: {
+            type: Boolean,
+            default: false,
         },
     },
     emits: ['delete-conversion', 'clear-history', 'export'],
@@ -343,7 +347,9 @@ export default {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -533,80 +539,95 @@ export default {
 }
 
 /* Modo escuro */
-:global([data-bs-theme='dark']) .conversion-history-container {
-    background: #252525;
-    border-color: #333333;
+.conversion-history-container.bg-dark {
+    background-color: #252d45 !important;
+    border-color: #3d4566 !important;
 }
 
-:global([data-bs-theme='dark']) .history-header h3 {
-    color: #e0e0e0;
+.conversion-history-container.bg-dark .history-header h3 {
+    color: #ffffff !important;
 }
 
-:global([data-bs-theme='dark']) .history-header {
-    border-color: #333333;
+.conversion-history-container.bg-dark .history-header {
+    border-color: #3d4566 !important;
 }
 
-:global([data-bs-theme='dark']) .list-controls {
-    border-bottom-color: #333333;
+.conversion-history-container.bg-dark .list-controls {
+    border-bottom-color: #3d4566 !important;
 }
 
-:global([data-bs-theme='dark']) .conversion-item {
-    background: #1e1e1e;
-    border-left-color: #3a9d5d;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.conversion-history-container.bg-dark .conversion-item {
+    background-color: #1e2637 !important;
+    border-left-color: #3a9d5d !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
-:global([data-bs-theme='dark']) .amount-from,
-:global([data-bs-theme='dark']) .amount-to {
-    color: #ffffff;
+.conversion-history-container.bg-dark .amount-from,
+.conversion-history-container.bg-dark .amount-to {
+    color: #ffffff !important;
 }
 
-:global([data-bs-theme='dark']) .currency-from,
-:global([data-bs-theme='dark']) .currency-to {
-    background: #333333;
-    color: #b0b0b0;
+.conversion-history-container.bg-dark .currency-from,
+.conversion-history-container.bg-dark .currency-to {
+    background-color: #333333 !important;
+    color: #b0b0b0 !important;
 }
 
-:global([data-bs-theme='dark']) .arrow {
-    color: #888888;
+.conversion-history-container.bg-dark .arrow {
+    color: #888888 !important;
 }
 
-:global([data-bs-theme='dark']) .item-info {
-    color: #b0b0b0;
+.conversion-history-container.bg-dark .item-info {
+    color: #b0b0b0 !important;
 }
 
-:global([data-bs-theme='dark']) .rate {
-    color: #6db3f2;
+.conversion-history-container.bg-dark .rate {
+    color: #6db3f2 !important;
 }
 
-:global([data-bs-theme='dark']) .date {
-    color: #888888;
+.conversion-history-container.bg-dark .date {
+    color: #888888 !important;
 }
 
-:global([data-bs-theme='dark']) .btn-delete {
-    background: #5f1e1e;
-    border-color: #8f2a2a;
-    color: #ff8888;
+.conversion-history-container.bg-dark .btn-delete {
+    background-color: #5f1e1e !important;
+    border-color: #8f2a2a !important;
+    color: #ff8888 !important;
 }
 
-:global([data-bs-theme='dark']) .btn-delete:hover {
-    background: #8f2a2a;
-    border-color: #b83a3a;
+.conversion-history-container.bg-dark .btn-delete:hover {
+    background-color: #8f2a2a !important;
+    border-color: #b83a3a !important;
 }
 
-:global([data-bs-theme='dark']) .pagination {
-    border-top-color: #333333;
+.conversion-history-container.bg-dark .pagination {
+    border-top-color: #3d4566 !important;
 }
 
-:global([data-bs-theme='dark']) .page-info {
-    color: #b0b0b0;
+.conversion-history-container.bg-dark .page-info {
+    color: #b0b0b0 !important;
 }
 
-:global([data-bs-theme='dark']) .empty-state {
-    color: #888888;
+.conversion-history-container.bg-dark .empty-state {
+    color: #888888 !important;
 }
 
-:global([data-bs-theme='dark']) .empty-state p {
-    color: #b0b0b0;
+.conversion-history-container.bg-dark .empty-state p {
+    color: #b0b0b0 !important;
+}
+
+.conversion-history-container.bg-dark .btn-outline-secondary,
+.conversion-history-container.bg-dark .btn-outline-primary,
+.conversion-history-container.bg-dark .btn-outline-danger {
+    border-color: #3d4566 !important;
+    color: #f0f0f0 !important;
+}
+
+.conversion-history-container.bg-dark .btn-outline-secondary:hover,
+.conversion-history-container.bg-dark .btn-outline-primary:hover,
+.conversion-history-container.bg-dark .btn-outline-danger:hover {
+    background-color: #3d4566 !important;
+    border-color: #5d6d8e !important;
+    color: #ffffff !important;
 }
 </style>
